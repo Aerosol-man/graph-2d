@@ -25,6 +25,7 @@ var background_color = Color.black setget set_background_color
 ## Grid visibility
 var grid_horizontal_visible := false setget set_grid_horizontal_visible
 var grid_vertical_visible := false setget set_grid_vertical_visible
+var grid_color := Color(1,1,1,0.3) setget set_grid_color
 
 var _curves: Array # [id: int, color: Color, width: int] 
 var _background := ColorRect.new()
@@ -53,7 +54,6 @@ var _margin = {
 ## Public Methods
 
 func add_curve(label = "untitled", color = Color.red, width = 1.0) -> int:
-	
 	var id: int = 0
 	var id_unique = false
 	
@@ -171,11 +171,14 @@ func _setup_graph():
 	_plot_area.margin_right = -MARGIN_RIGHT
 	_plot_area.margin_bottom = -MARGIN_BOTTOM
 	add_child(_plot_area)
-	
+
+	grid.name = "Grid"
+	grid.color = grid_color
+	add_child(grid)
+
 	axis.name = "Axis"
 	add_child(axis)
-	grid.name = "Grid"
-	add_child(grid)
+
 	legend.name = "Legend"
 	add_child(legend)
 	
@@ -193,7 +196,6 @@ func _update_margins() -> void:
 	_margin.bottom = MARGIN_BOTTOM if x_axis_label == "" else MARGIN_BOTTOM + 20
 
 func _update_axis() -> void:
-
 	# Vertical Graduation
 	var y_axis_range: float = y_axis_max_value - y_axis_min_value
 	# Horizontal Graduation
@@ -298,7 +300,6 @@ func _update_plot() -> void:
 		var pts_px: PoolVector2Array
 		var pt_px: Vector2
 		for pt in curve.points:
-#			print(rect_size)
 			pt.x = clamp(pt.x, x_axis_min_value, x_axis_max_value)
 			pt.y = clamp(pt.y, y_axis_min_value, y_axis_max_value)
 			pt_px.x = range_lerp(pt.x, x_axis_min_value, x_axis_max_value, 0, _plot_area.rect_size.x)
@@ -352,17 +353,22 @@ func set_y_axis_label(value) -> void:
 	_update_legend()
 	_update_plot()
 	
-func set_background_color(value):
+func set_background_color(value) -> void:
 	background_color = value
 	if is_instance_valid(_background):
 		_background.color = background_color
 	
-func set_grid_horizontal_visible(value):
+func set_grid_horizontal_visible(value) -> void:
 	grid_horizontal_visible = value
 	_update_axis()
 
-func set_grid_vertical_visible(value):
+func set_grid_vertical_visible(value)-> void:
 	grid_vertical_visible = value
+	_update_axis()
+
+func set_grid_color(value) -> void:
+	grid_color = value
+	grid.color = value
 	_update_axis()
 	
 func _get_property_list() -> Array:

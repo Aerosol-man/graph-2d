@@ -10,5 +10,3 @@ func _ready():
 func _draw():
 	for legend in legend_array:
 		draw_string(default_font, legend[2], legend[0], legend[1])
-		
-
