@@ -472,7 +472,7 @@ func _get_property_list() -> Array:
 	)
 	props.append(
 		{
-			"name": "grid_color"
+			"name": "grid_color",
 			"type": TYPE_COLOR
 		}
 	)
