@@ -30,7 +30,7 @@ var grid_color := Color(1,1,1,0.3) setget set_grid_color
 
 ## Font color of legend
 var legend_font_color := Color.white setget set_legend_font_color
-var legend_background := StyleBox.new() setget set_legend_background
+var legend_background := StyleBoxFlat.new() setget set_legend_background
 
 var _curves: Array # [id: int, color: Color, width: int] 
 var _background := ColorRect.new()
@@ -185,9 +185,11 @@ func _setup_graph():
 	add_child(axis)
 
 	legend.name = "Legend"
-	legend.panel = legend_background
+	legend.rect_size = legend.get_text_size()
+	legend.add_stylebox_override("panel", legend_background)
 	add_child(legend)
-	
+
+
 	connect("resized", self, "_on_Graph_resized")
 	_plot_area.connect("resized", self, "_on_Plot_area_resized")
 
@@ -276,27 +278,24 @@ func _update_axis() -> void:
 	axis.update()
 	grid.update()
 	
-	
 func _update_legend():
 	var legend_array: Array
-	var legend_pos_px: Vector2
-	legend_pos_px.x = _margin.left + 10
+	var legend_pos_px := Vector2(_margin.left + 10, MARGIN_TOP)
+	legend.rect_position = legend_pos_px
 	var plots_number = _curves.size()
 	var n = 0
 	for curve in _curves:
 		var legend: Array
 		legend.append(curve.label)
 		legend.append(curve.color)
-		legend_pos_px.y = MARGIN_TOP + 20 + n*20
+		legend_pos_px.y += 20
 		legend.append(legend_pos_px)
 		legend_array.append(legend)
 		n += 1
 	legend.legend_array = legend_array
 	legend.update()
 	
-	
 func _update_plot() -> void:
-	
 	_plot_area.margin_left = _margin.left
 	_plot_area.margin_top = MARGIN_TOP
 	_plot_area.margin_right = -MARGIN_RIGHT
@@ -316,7 +315,6 @@ func _update_plot() -> void:
 		plt.points_px = pts_px
 		plt.update()
 		
-
 func set_x_axis_min_value(value) -> void:
 	x_axis_min_value = value
 	_update_axis()
@@ -379,7 +377,7 @@ func set_grid_color(value) -> void:
 
 func set_legend_background(value) -> void:
 	legend_background = value
-	legend.panel = value
+	legend.add_stylebox_override("panel", value)
 	
 func set_legend_font_color(value) -> void:
 	legend_font_color = value
@@ -509,7 +507,7 @@ func _get_property_list() -> Array:
 		{
 			"name": "legend_background",
 			"type": TYPE_OBJECT,
-			"hint": PROPERTY_HINT_RESOURCE_TYPE
+			"hint": PROPERTY_HINT_RESOURCE_TYPE,
 			"hint_string": "StyleBox"
 		}
 	)
