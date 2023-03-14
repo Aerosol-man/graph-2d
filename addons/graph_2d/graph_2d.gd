@@ -27,6 +27,8 @@ var grid_horizontal_visible := false setget set_grid_horizontal_visible
 var grid_vertical_visible := false setget set_grid_vertical_visible
 var grid_color := Color(1,1,1,0.3) setget set_grid_color
 
+var legend_background := StyleBox.new() setget set_legend_background
+
 var _curves: Array # [id: int, color: Color, width: int] 
 var _background := ColorRect.new()
 var _plot_area := Control.new()
@@ -180,6 +182,7 @@ func _setup_graph():
 	add_child(axis)
 
 	legend.name = "Legend"
+	legend.panel = legend_background
 	add_child(legend)
 	
 	connect("resized", self, "_on_Graph_resized")
@@ -370,6 +373,10 @@ func set_grid_color(value) -> void:
 	grid_color = value
 	grid.color = value
 	_update_axis()
+
+func set_legend_background(value) -> void:
+	legend_background = value
+	legend.panel = value
 	
 func _get_property_list() -> Array:
 	var props = []
@@ -474,6 +481,14 @@ func _get_property_list() -> Array:
 		{
 			"name": "grid_color",
 			"type": TYPE_COLOR
+		}
+	)
+	props.append(
+		{
+			"name": "legend_background",
+			"type": TYPE_OBJECT,
+			"hint": PROPERTY_HINT_RESOURCE_TYPE
+			"hint_string": "StyleBox"
 		}
 	)
 	return props
