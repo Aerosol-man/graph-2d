@@ -25,7 +25,11 @@ var background_color = Color.black setget set_background_color
 ## Grid visibility
 var grid_horizontal_visible := false setget set_grid_horizontal_visible
 var grid_vertical_visible := false setget set_grid_vertical_visible
+## Font color of grid 
 var grid_color := Color(1,1,1,0.3) setget set_grid_color
+
+## Font color of legend
+var legend_font_color := Color.white setget set_legend_font_color
 
 var _curves: Array # [id: int, color: Color, width: int] 
 var _background := ColorRect.new()
@@ -371,6 +375,11 @@ func set_grid_color(value) -> void:
 	grid.color = value
 	_update_axis()
 	
+func set_legend_font_color(value) -> void:
+	legend_font_color = value
+	legend.font_color = value
+	_update_legend()
+	
 func _get_property_list() -> Array:
 	var props = []
 	props.append(
@@ -474,6 +483,20 @@ func _get_property_list() -> Array:
 		{
 			"name": "grid_color",
 			"type": TYPE_COLOR
+		}
+	)
+	props.append(
+		{
+			"name": "Legend",
+			"type": TYPE_NIL,
+			"hint_string": "legend_",
+			"usage": PROPERTY_USAGE_GROUP,
+		}
+	)
+	props.append(
+		{
+			"name": "legend_font_color",
+			"type": TYPE_COLOR,
 		}
 	)
 	return props

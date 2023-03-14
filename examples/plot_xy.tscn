@@ -23,3 +23,5 @@ y_axis_grad_number = 7
 y_axis_label = "y(m)"
 grid_horizontal_visible = true
 grid_vertical_visible = true
+grid_color = Color( 1, 1, 1, 0.3 )
+legend_font_color = Color( 1, 1, 1, 1 )
